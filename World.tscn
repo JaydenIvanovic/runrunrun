@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://assets/simple-vial.png" type="Texture" id=1]
 [ext_resource path="res://assets/plain-tiles.png" type="Texture" id=2]
@@ -88,6 +88,27 @@
 4/shapes = [  ]
 4/z_index = 0
 
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform float red = 0.0;
+uniform float green = 0.0;
+uniform float blue = 0.0;
+
+void fragment() {
+  COLOR = texture(TEXTURE, UV);
+
+  COLOR.r = max(red, COLOR.r);
+  COLOR.g = max(green, COLOR.g);
+  COLOR.b = max(blue, COLOR.b);
+}"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/red = 0.0
+shader_param/green = 0.0
+shader_param/blue = 0.0
+
 [node name="World" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
@@ -131,7 +152,8 @@ margin_bottom = 56.0
 valign = 2
 
 [node name="Player" type="Sprite" parent="."]
-position = Vector2( 161, 295 )
+material = SubResource( 4 )
+position = Vector2( 161, 279 )
 texture = ExtResource( 3 )
 script = ExtResource( 4 )
 

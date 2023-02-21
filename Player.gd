@@ -26,6 +26,7 @@ func _process(delta):
 	
 func initialize_state():
 	active_tile = round(rand_range(0,3))
+	set_color(get_tile_name(active_tile))
 	emit_signal("active_tile_changed", get_tile_name(active_tile))
 
 func process_movement(delta):
@@ -48,8 +49,33 @@ func process_environment_damage(delta):
 
 func on_random_env_damage_timeout():
 	active_tile = round(rand_range(0,3))
-	emit_signal("active_tile_changed", get_tile_name(active_tile))
+	var active_tile_name = get_tile_name(active_tile)
+	emit_signal("active_tile_changed", active_tile_name)
+	set_color(active_tile_name)
 	random_env_damage_timer.start(rand_range(2,4))
 
 func get_tile_name(tile_index):
 	return ["Yellow", "Red", "Blue", "Green"][tile_index]
+
+func set_color(tile_name):
+	match tile_name:
+		"Yellow": 
+			material.set_shader_param("red", 0.85)
+			material.set_shader_param("green", 0.55)
+			material.set_shader_param("blue", 0.35)
+		"Red":
+			material.set_shader_param("red", 1.0)
+			material.set_shader_param("green", 0.3)
+			material.set_shader_param("blue", 0.9)
+		"Blue":
+			material.set_shader_param("red", 0.0)
+			material.set_shader_param("green", 0.0)
+			material.set_shader_param("blue", 1.0)
+		"Green":
+			material.set_shader_param("red", 0.0)
+			material.set_shader_param("green", 0.7)
+			material.set_shader_param("blue", 0.3)
+		_:
+			material.set_shader_param("red", 0.0)
+			material.set_shader_param("green", 0.0)
+			material.set_shader_param("blue", 0.0)
