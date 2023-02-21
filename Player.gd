@@ -7,6 +7,7 @@ export var environment_damage_decay = 10
 var tile_map: TileMap
 var random_env_damage_timer: Timer
 var active_tile = 0
+var is_moving = false
 
 signal player_health_reduced
 signal active_tile_changed
@@ -30,16 +31,27 @@ func initialize_state():
 	emit_signal("active_tile_changed", get_tile_name(active_tile))
 
 func process_movement(delta):
+	is_moving = false
+	
 	if Input.is_action_pressed("move_left"):
 		position += Vector2.LEFT * speed * delta
 		flip_h = true
+		is_moving = true
 	if Input.is_action_pressed("move_right"):
 		position += Vector2.RIGHT * speed * delta
 		flip_h = false
+		is_moving = true
 	if Input.is_action_pressed("move_up"):
 		position += Vector2.UP * speed * delta
+		is_moving = true
 	if Input.is_action_pressed("move_down"):
 		position += Vector2.DOWN * speed * delta
+		is_moving = true
+	
+	if is_moving:
+		$AnimationPlayer.play("move")
+	else:
+		$AnimationPlayer.stop(true)
 
 func process_environment_damage(delta):
 	var tile = tile_map.get_cellv(tile_map.world_to_map(position))
