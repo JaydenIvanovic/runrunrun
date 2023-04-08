@@ -18,7 +18,7 @@ func _ready():
 	tile_map = $"../TileMap"
 	random_env_damage_timer = $RandomEnvDamageTimer
 	random_env_damage_timer.connect("timeout", randomize_active_tile)
-	$"../Enemy".connect("enemy_exploded", process_explosion_damage)
+	EventBus.connect("enemy_exploded", process_explosion_damage)
 	initialize_state()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

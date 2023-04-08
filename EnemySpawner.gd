@@ -9,7 +9,6 @@ func _ready():
 		instance.target = $"../Player"
 		get_parent().add_child(instance)
 		instance.position = get_random_spawn_position()
-		instance.connect("enemy_exploded", Callable($"../Player", "process_explosion_damage"))
 	)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

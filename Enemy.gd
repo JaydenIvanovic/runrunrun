@@ -19,5 +19,5 @@ func _physics_process(delta):
 	var collision_info = move_and_collide(target_direction.normalized() * speed * delta)
 	if collision_info:
 		var collision_source = collision_info.get_collider().name
-		emit_signal("enemy_exploded", collision_source)
+		EventBus.emit_signal("enemy_exploded", collision_source)
 		queue_free()
