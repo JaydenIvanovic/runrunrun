@@ -1,4 +1,4 @@
-extends Sprite2D
+extends CharacterBody2D
 
 @export var health = 100
 @export var speed = 200
@@ -7,7 +7,6 @@ extends Sprite2D
 var tile_map: TileMap
 var random_env_damage_timer: Timer
 var active_tile = 0
-var tile_being_stood_on = 0
 var is_moving = false
 
 signal player_health_changed
@@ -19,6 +18,7 @@ func _ready():
 	tile_map = $"../TileMap"
 	random_env_damage_timer = $RandomEnvDamageTimer
 	random_env_damage_timer.connect("timeout", randomize_active_tile)
+	$"../Enemy".connect("enemy_exploded", process_explosion_damage)
 	initialize_state()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -36,11 +36,11 @@ func process_movement(delta):
 	
 	if Input.is_action_pressed("move_left"):
 		position += Vector2.LEFT * speed * delta
-		flip_h = true
+		$Sprite.flip_h = true
 		is_moving = true
 	if Input.is_action_pressed("move_right"):
 		position += Vector2.RIGHT * speed * delta
-		flip_h = false
+		$Sprite.flip_h = false
 		is_moving = true
 	if Input.is_action_pressed("move_up"):
 		position += Vector2.UP * speed * delta
@@ -60,6 +60,11 @@ func process_environment_damage(delta):
 		health -=  environment_damage_decay * delta
 		emit_signal("player_health_changed", health)
 
+func process_explosion_damage(target):
+	if target == self.name:
+		health -= 100
+		emit_signal("player_health_changed", health)
+
 func randomize_active_tile():
 	active_tile = round(randf_range(0,3))
 	var active_tile_name = get_tile_name(active_tile)
@@ -73,22 +78,22 @@ func get_tile_name(tile_index):
 func set_color(tile_name):
 	match tile_name:
 		"Yellow": 
-			material.set_shader_parameter("red", 0.85)
-			material.set_shader_parameter("green", 0.55)
-			material.set_shader_parameter("blue", 0.35)
+			$Sprite.material.set_shader_parameter("red", 0.85)
+			$Sprite.material.set_shader_parameter("green", 0.55)
+			$Sprite.material.set_shader_parameter("blue", 0.35)
 		"Red":
-			material.set_shader_parameter("red", 1.0)
-			material.set_shader_parameter("green", 0.3)
-			material.set_shader_parameter("blue", 0.9)
+			$Sprite.material.set_shader_parameter("red", 1.0)
+			$Sprite.material.set_shader_parameter("green", 0.3)
+			$Sprite.material.set_shader_parameter("blue", 0.9)
 		"Blue":
-			material.set_shader_parameter("red", 0.0)
-			material.set_shader_parameter("green", 0.0)
-			material.set_shader_parameter("blue", 1.0)
+			$Sprite.material.set_shader_parameter("red", 0.0)
+			$Sprite.material.set_shader_parameter("green", 0.0)
+			$Sprite.material.set_shader_parameter("blue", 1.0)
 		"Green":
-			material.set_shader_parameter("red", 0.0)
-			material.set_shader_parameter("green", 0.7)
-			material.set_shader_parameter("blue", 0.3)
+			$Sprite.material.set_shader_parameter("red", 0.0)
+			$Sprite.material.set_shader_parameter("green", 0.7)
+			$Sprite.material.set_shader_parameter("blue", 0.3)
 		_:
-			material.set_shader_parameter("red", 0.0)
-			material.set_shader_parameter("green", 0.0)
-			material.set_shader_parameter("blue", 0.0)
+			$Sprite.material.set_shader_parameter("red", 0.0)
+			$Sprite.material.set_shader_parameter("green", 0.0)
+			$Sprite.material.set_shader_parameter("blue", 0.0)

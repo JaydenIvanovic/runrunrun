@@ -1,10 +1,12 @@
-[gd_scene load_steps=17 format=3 uid="uid://beoho0h16au1x"]
+[gd_scene load_steps=20 format=3 uid="uid://beoho0h16au1x"]
 
 [ext_resource type="Texture2D" uid="uid://dbni2s57jbiej" path="res://assets/plain-tiles.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://b4aqk3h6c6jo4" path="res://assets/robot-ss.png" id="3"]
 [ext_resource type="Script" path="res://Player.gd" id="4"]
 [ext_resource type="Script" path="res://TileMap.gd" id="5"]
 [ext_resource type="Script" path="res://HUD.gd" id="6"]
+[ext_resource type="PackedScene" uid="uid://ctfd8cfs3yhfj" path="res://Enemy.tscn" id="7_3divo"]
+[ext_resource type="Script" path="res://EnemySpawner.gd" id="8_gwggf"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_glh58"]
 texture = ExtResource("2")
@@ -122,27 +124,6 @@ sources/2 = SubResource("TileSetAtlasSource_akxyx")
 sources/3 = SubResource("TileSetAtlasSource_vbeyi")
 sources/4 = SubResource("TileSetAtlasSource_fjror")
 
-[sub_resource type="Shader" id="3"]
-code = "shader_type canvas_item;
-
-uniform float red = 0.0;
-uniform float green = 0.0;
-uniform float blue = 0.0;
-
-void fragment() {
-  COLOR = texture(TEXTURE, UV);
-
-  COLOR.r = max(red, COLOR.r);
-  COLOR.g = max(green, COLOR.g);
-  COLOR.b = max(blue, COLOR.b);
-}"
-
-[sub_resource type="ShaderMaterial" id="4"]
-shader = SubResource("3")
-shader_parameter/red = 0.0
-shader_parameter/green = 0.0
-shader_parameter/blue = 0.0
-
 [sub_resource type="Animation" id="5"]
 length = 0.001
 tracks/0/type = "value"
@@ -192,6 +173,30 @@ _data = {
 "move": SubResource("6")
 }
 
+[sub_resource type="Shader" id="3"]
+code = "shader_type canvas_item;
+
+uniform float red = 0.0;
+uniform float green = 0.0;
+uniform float blue = 0.0;
+
+void fragment() {
+  COLOR = texture(TEXTURE, UV);
+
+  COLOR.r = max(red, COLOR.r);
+  COLOR.g = max(green, COLOR.g);
+  COLOR.b = max(blue, COLOR.b);
+}"
+
+[sub_resource type="ShaderMaterial" id="4"]
+shader = SubResource("3")
+shader_parameter/red = 0.0
+shader_parameter/green = 0.0
+shader_parameter/blue = 0.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_21i4y"]
+size = Vector2(23, 29)
+
 [node name="World" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
@@ -222,23 +227,6 @@ offset_top = 42.0
 offset_right = 79.0
 offset_bottom = 56.0
 
-[node name="Player" type="Sprite2D" parent="."]
-material = SubResource("4")
-position = Vector2(161, 279)
-texture = ExtResource("3")
-hframes = 4
-script = ExtResource("4")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
-libraries = {
-"": SubResource("AnimationLibrary_yk5mr")
-}
-
-[node name="RandomEnvDamageTimer" type="Timer" parent="Player"]
-wait_time = 3.0
-one_shot = true
-autostart = true
-
 [node name="GameOverMessage" type="Panel" parent="."]
 process_mode = 2
 visible = false
@@ -262,3 +250,37 @@ offset_top = 109.0
 offset_right = 262.0
 offset_bottom = 148.0
 text = "Click to restart"
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(161, 279)
+script = ExtResource("4")
+
+[node name="RandomEnvDamageTimer" type="Timer" parent="Player"]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
+root_node = NodePath("../Sprite")
+libraries = {
+"": SubResource("AnimationLibrary_yk5mr")
+}
+
+[node name="Sprite" type="Sprite2D" parent="Player"]
+material = SubResource("4")
+texture = ExtResource("3")
+hframes = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_21i4y")
+
+[node name="Enemy" parent="." node_paths=PackedStringArray("target") instance=ExtResource("7_3divo")]
+position = Vector2(639, 278)
+target = NodePath("../Player")
+
+[node name="EnemySpawner" type="Node" parent="."]
+script = ExtResource("8_gwggf")
+
+[node name="Timer" type="Timer" parent="EnemySpawner"]
+autostart = true
