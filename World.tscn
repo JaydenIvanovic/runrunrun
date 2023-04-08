@@ -227,30 +227,6 @@ offset_top = 42.0
 offset_right = 79.0
 offset_bottom = 56.0
 
-[node name="GameOverMessage" type="Panel" parent="."]
-process_mode = 2
-visible = false
-offset_left = 379.0
-offset_top = 172.0
-offset_right = 688.0
-offset_bottom = 385.0
-
-[node name="Label" type="Label" parent="GameOverMessage"]
-layout_mode = 0
-offset_left = 120.0
-offset_top = 75.0
-offset_right = 193.0
-offset_bottom = 89.0
-text = "Game Over"
-
-[node name="Button" type="Button" parent="GameOverMessage"]
-layout_mode = 0
-offset_left = 57.0
-offset_top = 109.0
-offset_right = 262.0
-offset_bottom = 148.0
-text = "Click to restart"
-
 [node name="Player" type="CharacterBody2D" parent="."]
 position = Vector2(161, 279)
 script = ExtResource("4")
@@ -284,3 +260,27 @@ script = ExtResource("8_gwggf")
 
 [node name="Timer" type="Timer" parent="EnemySpawner"]
 autostart = true
+
+[node name="GameOverMessage" type="Panel" parent="."]
+process_mode = 2
+visible = false
+offset_left = 379.0
+offset_top = 172.0
+offset_right = 688.0
+offset_bottom = 385.0
+
+[node name="Label" type="Label" parent="GameOverMessage"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 75.0
+offset_right = 193.0
+offset_bottom = 89.0
+text = "Game Over"
+
+[node name="Button" type="Button" parent="GameOverMessage"]
+layout_mode = 0
+offset_left = 57.0
+offset_top = 109.0
+offset_right = 262.0
+offset_bottom = 148.0
+text = "Click to restart"
