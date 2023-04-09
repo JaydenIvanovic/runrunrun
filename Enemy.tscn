@@ -1,7 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://ctfd8cfs3yhfj"]
+[gd_scene load_steps=6 format=3 uid="uid://ctfd8cfs3yhfj"]
 
 [ext_resource type="Texture2D" uid="uid://csxkvdd5jwh0g" path="res://assets/enemy.png" id="1_61g25"]
 [ext_resource type="Script" path="res://Enemy.gd" id="2_kn73k"]
+[ext_resource type="Shader" path="res://Enemy.gdshader" id="2_t8rq7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_etf8s"]
+resource_local_to_scene = true
+shader = ExtResource("2_t8rq7")
+shader_parameter/red = 0.0
+shader_parameter/green = 0.0
+shader_parameter/blue = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mk6du"]
 radius = 12.3693
@@ -10,9 +18,11 @@ radius = 12.3693
 script = ExtResource("2_kn73k")
 
 [node name="Sprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_etf8s")
 texture = ExtResource("1_61g25")
 hframes = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0, 3)
 shape = SubResource("CircleShape2D_mk6du")
