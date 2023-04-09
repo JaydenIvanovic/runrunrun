@@ -3,7 +3,7 @@ extends Panel
 func _ready():
 	var player = $"../Player"
 	
-	player.connect("player_health_changed", func(health):
+	EventBus.player_health_changed.connect(func(health):
 		var label = $Health
 		label.text = str(round(health)) + "%"
 		if health <= 0:
@@ -12,7 +12,7 @@ func _ready():
 			game_over_message.show()
 	)
 	
-	player.connect("active_tile_changed", func(tile_name):
+	EventBus.active_tile_changed.connect(func(tile_name):
 		var label = $ActiveTile
 		label.text = tile_name
 	)

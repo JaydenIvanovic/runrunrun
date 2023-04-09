@@ -9,16 +9,13 @@ var random_env_damage_timer: Timer
 var active_tile = 0
 var is_moving = false
 
-signal player_health_changed
-signal active_tile_changed
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
 	tile_map = $"../TileMap"
 	random_env_damage_timer = $RandomEnvDamageTimer
 	random_env_damage_timer.connect("timeout", randomize_active_tile)
-	EventBus.connect("enemy_exploded", process_explosion_damage)
+	EventBus.enemy_exploded.connect(process_explosion_damage)
 	initialize_state()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -29,7 +26,7 @@ func _process(delta):
 func initialize_state():
 	active_tile = round(randf_range(0,3))
 	set_color(get_tile_name(active_tile))
-	emit_signal("active_tile_changed", get_tile_name(active_tile))
+	EventBus.active_tile_changed.emit(get_tile_name(active_tile))
 
 func process_movement(delta):
 	is_moving = false
@@ -58,17 +55,17 @@ func process_environment_damage(delta):
 	var tile = tile_map.get_cell_source_id(0, tile_map.local_to_map(position))
 	if tile != active_tile:
 		health -=  environment_damage_decay * delta
-		emit_signal("player_health_changed", health)
+		EventBus.player_health_changed.emit(health)
 
 func process_explosion_damage(target):
 	if target == self.name:
 		health -= 100
-		emit_signal("player_health_changed", health)
+		EventBus.player_health_changed.emit(health)
 
 func randomize_active_tile():
 	active_tile = round(randf_range(0,3))
 	var active_tile_name = get_tile_name(active_tile)
-	emit_signal("active_tile_changed", active_tile_name)
+	EventBus.active_tile_changed.emit(active_tile_name)
 	set_color(active_tile_name)
 	random_env_damage_timer.start(randf_range(2,4))
 

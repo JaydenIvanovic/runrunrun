@@ -1,3 +1,5 @@
 extends Node
 
 signal enemy_exploded
+signal player_health_changed
+signal active_tile_changed

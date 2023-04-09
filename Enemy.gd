@@ -3,8 +3,6 @@ extends CharacterBody2D
 @export var target: Node2D
 var speed = 50
 
-signal enemy_exploded
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass
@@ -19,5 +17,5 @@ func _physics_process(delta):
 	var collision_info = move_and_collide(target_direction.normalized() * speed * delta)
 	if collision_info:
 		var collision_source = collision_info.get_collider().name
-		EventBus.emit_signal("enemy_exploded", collision_source)
+		EventBus.enemy_exploded.emit(collision_source)
 		queue_free()
